@@ -1,0 +1,28 @@
+{
+  "name": "webshocket",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npm run build && node dist/index.js",
+    "build": "esbuild src/index.ts --platform=node --bundle --outdir=dist"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^5.19.1",
+    "@types/cookie-parser": "^1.4.7",
+    "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/ws": "^8.5.12",
+    "body-parser": "^1.20.3",
+    "cookie-parser": "^1.4.6",
+    "esbuild": "^0.23.1",
+    "express": "^4.21.0",
+    "ioredis": "^5.4.1",
+    "jsonwebtoken": "^9.0.2",
+    "prisma": "^5.19.1",
+    "ws": "^8.18.0",
+    "zod": "^3.23.8"
+  }
+}
