@@ -27,11 +27,7 @@ export const connectionControler = async(user:{email:string}, ws:WebSocket)=>{
         
     if(redisClient.status=="ready"){
         try {            
-            const offline = await redisClient.hset("connectedUser",user.email,JSON.stringify(ws))
-            if(!offline){
-                return
-            }
-            await redisPublisher.publish("activeUserChannel",JSON.stringify({action:"connect",email:user.email,ws}))
+            await redisPublisher.publish("activeUserChannel",JSON.stringify({action:"connect",email:user.email}))
             return
         } catch (error) {
             console.log(error)

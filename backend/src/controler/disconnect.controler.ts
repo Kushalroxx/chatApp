@@ -6,10 +6,7 @@ export const disconnectControler = async(email:string)=>{
     
     if(redisClient.status == "ready"){
         try {
-            const disconnect = await redisClient.hdel("connectedUser", email)
-            if (disconnect) {
-                await redisPublisher.publish("activeUserChannel",JSON.stringify({action:"disconnect",email}))
-            }
+            await redisPublisher.publish("activeUserChannel",JSON.stringify({action:"disconnect",email}))
             
         } catch (error) {
             console.log(error)

@@ -12,11 +12,7 @@ class TempQueue{
         return this.queue.shift()
     }
     peek(){
-        if(this.queue[0]){
-            return true
-        }else{
-            return false
-        }
+        return this.queue[0]
     }
 }
 const tempQueue = new TempQueue()

@@ -1,10 +1,10 @@
 import WebSocket from "ws"
 class ActiveUser{
-    private activeUsers:Map<string, WebSocket>
+    private activeUsers:Map<string, WebSocket|null>
     constructor(){
         this.activeUsers = new Map()
     }
-    add(email:string,ws:WebSocket){
+    add(email:string,ws:WebSocket|null){
         if(this.activeUsers.has(email)){
             return false
         }
