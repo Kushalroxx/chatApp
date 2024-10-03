@@ -6,9 +6,13 @@ import { messageControler } from "./controler/message.controler";
 import { connectionControler } from "./controler/connection.controler";
 import { disconnectControler } from "./controler/disconnect.controler";
 import { handleSubscribe } from "./utils/handleSubscribe";
+import "./utils/redisReconnect"
+import { serverRestart } from "./utils/handleServerStart";
 
-
-setTimeout(e=>handleSubscribe(),1000)
+new Promise(e=>setTimeout(e=>{
+    handleSubscribe()
+    serverRestart()
+},1000))
 
 const server = app.listen(process.env.PORT, () => {
     console.log(`http://localhost:${process.env.PORT}`);

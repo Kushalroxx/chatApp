@@ -15,6 +15,8 @@ export const redisPublisher = new Redis(redisConnectionObj)
 export const redisSubscriber = new Redis(redisConnectionObj)
 export const redisMessageSubscriber = new Redis(redisConnectionObj)
 export const redisMessagePublisher = new Redis(redisConnectionObj)
+export const redisServerRestartPublisher = new Redis(redisConnectionObj)
+export const redisServerRestartSubscriber = new Redis(redisConnectionObj)
 
 
 redisClient.on("error",(err)=>{
@@ -35,5 +37,13 @@ redisMessageSubscriber.on("error",(err)=>{
 
 redisMessagePublisher.on("error",(err)=>{
     console.log(err)
+})
+
+redisServerRestartPublisher.on("error",(err)=>{
+    console.log(err);
+})
+
+redisServerRestartSubscriber.on("error",(err)=>{
+    console.log(err);
 })
 

@@ -29,7 +29,7 @@ export const loginControler = async(req:Request, res:Response)=>{
             }
             return user
         })
-        const token = jwt.sign({email:user.email,id:user.id},"secret")
+        const token = jwt.sign({email:user.email,id:user.id},process.env.SECRET||"secret")
         await prisma.user.update({
             where:{
                 email:user?.email
@@ -37,7 +37,8 @@ export const loginControler = async(req:Request, res:Response)=>{
         data:{
             session:token
         }})
-        res.cookie("token", token,{httpOnly:true,sameSite:"lax"})
+        res.cookie("token", token,{
+            httpOnly:true})
         return res.status(201).json({user:{email:email,token:token},message:"User created"})
     } catch (error) {
         return res.status(500).json({message:"Something went wrong while login"})

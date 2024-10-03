@@ -1,4 +1,4 @@
-import { redisClient, redisMessageSubscriber, redisSubscriber } from "../db/redis.db";
+import { redisClient, redisMessageSubscriber, redisServerRestartSubscriber, redisSubscriber } from "../db/redis.db";
 import WebSocket from "ws";
 import tempQueue from "./inMemoryDbs/tempQueue";
 import activeUser from "./inMemoryDbs/activeUser";
@@ -30,6 +30,21 @@ export const handleSubscribe = async()=>{
                     return
                 }
                 toWs.send(JSON.stringify({status:"success",message:message.message,fromEmail:message.fromEmail}))
+            }
+        })
+        await redisServerRestartSubscriber.subscribe("serverRestart")
+        redisServerRestartSubscriber.on("message",(channel, msg)=>{
+            if(channel==="serverRestart"){
+                const {message} = JSON.parse(msg)
+                console.log(message);
+                
+                if(message === "clean"){
+                    const active = activeUser.getAll()
+                    active.forEach((ws, email)=>{
+                        ws?.close()
+                    })                    
+                    activeUser.remove()
+                } 
             }
         })
     }

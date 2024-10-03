@@ -11,12 +11,16 @@ class ActiveUser{
         this.activeUsers.set(email,ws)
         return true
     }
-    remove(email:string){
-        if(this.activeUsers.has(email)){
+    remove(email?:string){
+        if(!email){
+            this.activeUsers.clear()
+            return true
+        }else if(this.activeUsers.has(email)){
             this.activeUsers.delete(email)
             return true
+        }else{
+            return false
         }
-        return false
     }
     get(email:string){
         if(this.activeUsers.has(email)){
@@ -25,7 +29,7 @@ class ActiveUser{
         return
     }
     getAll(){
-        return Array.from(this.activeUsers)
+        return this.activeUsers
     }
     has(email:string){
         if(this.activeUsers.has(email)){

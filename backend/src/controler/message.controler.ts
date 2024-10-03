@@ -42,6 +42,11 @@ export const messageControler = async(msg:string,isBinary:boolean,userEmail:stri
         }else{
             if(redisClient.status === "ready"){
                 redisMessagePublisher.publish("messageChannel",JSON.stringify({toEmail,message,fromEmail:userEmail}))
+            }else{
+                const sentWs = activeUser.get(userEmail)
+                sentWs?.send(JSON.stringify({status:"failed", message:"service is unavailabe"}))
+                sentWs?.close()
+                activeUser.remove(userEmail)
             }
             return
         }
