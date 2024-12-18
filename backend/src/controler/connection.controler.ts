@@ -20,7 +20,7 @@ export const connectionControler = async(user:{email:string}, ws:WebSocket)=>{
         if(recivedMessages){
             recivedMessages.forEach((e)=>{
                 const obj :{fromEmail:string,message:string}= JSON.parse(e)
-                ws.send(JSON.stringify({status:"success",message:obj.message,fromEmail:obj.fromEmail}))
+                ws.send(JSON.stringify({status:"success",message:obj.message,from:obj.fromEmail}))
             })
         }
     }

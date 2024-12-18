@@ -44,3 +44,8 @@ export const loginControler = async(req:Request, res:Response)=>{
         return res.status(500).json({message:"Something went wrong while login"})
     }
 }
+
+export const signoutControler = (req:Request, res:Response)=>{
+    res.clearCookie("token",{httpOnly:true})
+    res.status(200).json({message:"ok"})
+}

@@ -1,12 +1,14 @@
-import Navbar from "@/components/Navbar";
-import SideBar from "@/components/SideBar";
-import { cookies } from "next/headers";
-
+import { cookies } from "next/headers"
+import Link from "next/link"
+import { redirect } from "next/navigation"
 export default function Home() {
+  if (cookies().has("token")){
+    redirect("/chats")
+  }
   return (
-    <div className="overflow-y-hidden h-screen bg-zinc-50">
-      <Navbar login={cookies().has("token")}/>
-      <SideBar/>
-      hello world</div>
+    <>
+    <Link href={"/login"}>login</Link><br></br>
+    home
+    </>
   )
 }

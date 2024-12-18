@@ -1,8 +1,9 @@
 import express from "express";
-import { loginControler } from "../controler/login.controler";
+import { loginControler ,signoutControler} from "../controler/login.controler";
 
 const loginRouter = express()
 
-loginRouter.route("/").post(loginControler)
+loginRouter.route("/login").post(loginControler)
+loginRouter.route("/signout").get(signoutControler)
 
 export {loginRouter}

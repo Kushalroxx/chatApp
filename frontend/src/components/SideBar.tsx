@@ -1,43 +1,46 @@
 "use client"
-import React from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+import SideTopBar from './SideTopBar'
+import { useRecoilValue } from 'recoil'
+import { dataSetState } from '@/lib/atom'
+import SideMenuBodyCard from './SideMenuBodyCard'
 import { usePathname } from 'next/navigation'
-import { motion } from 'framer-motion'
-import Link from 'next/link'
+import { useEffect, useState } from 'react'
 
 function SideBar() {
-    const pathname = usePathname()
+    const [cardTitles, setCardTitles] = useState(new Set())
+    const messages = useRecoilValue(dataSetState)
+    const router = usePathname()
+    useEffect(() => {
+        messages.forEach(msg=>{
+      setCardTitles(e=>{
+        const newSet = new Set(e)
+        if(newSet.has(msg.from||msg.to)){
+            newSet.delete(msg.from||msg.to)
+            newSet.add(msg.from||msg.to)   
+        }else{
+            newSet.add(msg.from||msg.to)
+        }
+        return newSet
+    })
+    })
+    }, [messages])
+    
     return (
-        <motion.div initial={{ x: -10, opacity: 0 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }} className='h-[88vh]'>
-            <div className='w-screen md:w-[340px] sm:w-[250px] bg-gray-50 h-full overflow-y-scroll scrollbar-track-transparent scrollbar-thumb-zinc-300 scrollbar-thin py-2'>
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }} className='flex h-10 justify-center items-end gap-20 sm:gap-10'>
-                    <div className='flex flex-col'>
-                    <Link
-                        href="/chats"
-                        className={`font-bold text-xl transition-all duration-75 px-3 rounded-b-[4px] ${pathname === "/chats"
-                                ? "text-blue-600"
-                                : "text-zinc-700"
-                            }`}
-                    >
-                        Chats
-                    </Link>
-                    <span  className={`rounded-full ml-1 ${pathname === "/chats" ? " bg-blue-500" : "bg-none"}  h-1 transition-all duration-300`}></span>
-                    </div>
-                    <div className='flex flex-col'>
-                    <Link
-                        href="/groups"
-                        className={`font-bold px-3 text-xl transition-all duration-75 text-zinc-800 ${pathname === "/groups"
-                                ? "text-blue-500"
-                                : "text-zinc-700"
-                            }`}
-                    >
-                        Groups
-                    </Link>
-                    <span  className={`rounded-full ml-1 ${pathname === "/groups" ? " bg-blue-500" : "bg-none"}  h-1 transition-all duration-300`}></span>
-                    </div>
-
-                </motion.div>
-                <div className='h-[1px] bg-slate-300 '></div>
-            </div>
+        <motion.div initial={{ x: -10, opacity: 0 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.7 }} className='h-[88vh]'>
+            <div className='w-screen md:w-[440px] sm:w-[250px] bg-gray-50 h-full overflow-y-scroll scrollbar-track-transparent scrollbar-thumb-zinc-300 scrollbar-thin py-2 shadow-lg shadow-zinc-400 border-r-2 border-zinc-300'>
+                <SideTopBar/>
+                <AnimatePresence mode="sync">{
+                    // @ts-ignore
+                   
+                    [...cardTitles].reverse().map((e,i)=>{return(
+                        <motion.div layout key={e} initial={{opacity:0,y:10}} animate={{opacity:1,y:0}} transition={{type:"spring",stiffness:300,damping:20}} exit={{opacity:0,y:-10,scale:0.5}}>
+                        <SideMenuBodyCard key={e} email={e}/>
+                        </motion.div>  
+                        )})
+                    }
+                    </AnimatePresence>   
+                </div>   
         </motion.div>
     )
 }

@@ -15,12 +15,15 @@ import { z } from "zod"
 import React from 'react'
 import { Card } from "./ui/card";
 import {motion} from "framer-motion"
-import axios from "axios"
+import axios, { AxiosError } from "axios"
 import Loader from "./Loader";
 import {useRouter} from "nextjs-toploader/app"
+import { useRecoilState } from "recoil";
+import { emailState } from "@/lib/atom";
 
 function Login() {
   const [loading,setLoading] = React.useState(false)
+  const [email, SetEmail] = useRecoilState(emailState)
   const router = useRouter()
   const loginSchema = z.object({
     email: z
@@ -36,11 +39,13 @@ function Login() {
   async function onSubmit(values: z.infer<typeof loginSchema>) {
     try {
       setLoading(true)
-      await axios.post("http://localhost:3001/login",{email:values.email},{withCredentials:true})
+      await axios.post("http://localhost:5000/login",{email:values.email},{withCredentials:true})
+      SetEmail(values.email)
+      localStorage.setItem("email",JSON.stringify(values.email))
       router.push("/")
-    } catch (error) {
-      form.setError("email", { type: "custom", message: "Something went wrong" })
-      console.log(error)
+    } catch (error:any) {
+      form.setError("email", { type: "custom", message: error.response?.data?.message||"something went wrong" })
+     
     } finally{
       setLoading(false)
     }
@@ -69,7 +74,7 @@ function Login() {
             </FormItem>
           )}
         />
-            <Button className=" font-bold bg-blue-600 hover:bg-blue-700" type="submit">Submit</Button>
+            <Button className=" font-bold bg-blue-600 hover:bg-blue-700" type="submit">Login</Button>
       </form>
     </Form>
     </Card>

@@ -2,7 +2,7 @@ import WebSocket from "ws";
 import { prisma } from "../../prisma/db";
 
 export const wsMiddlewere = async(ws: WebSocket, req: any) => {
-    const token = req.headers.cookie?req.headers.cookie["token"]:req.headers["token"];
+    const token = req.headers?.cookie?.split("token=")[1]   
     if(!token) {
         ws.send(JSON.stringify({status:"failed", message:"Unauthorized please provide a token"}));
         ws.close();
@@ -23,7 +23,6 @@ export const wsMiddlewere = async(ws: WebSocket, req: any) => {
     } catch (error) {
         ws.send(JSON.stringify({status:"failed", message:"Something went wrong while processing"}));
         ws.close();
-        console.log(error);
         return
         
     }
